@@ -110,66 +110,49 @@ int main() {
 	while (1)
 	{
 
-		for (int row = 0; row < +40; row++)
+		for (int row = 0; row < 40; row++)
 		{
-			for (int col = 0; col <= 40; col++)
+			for (int col = 0; col < 40; col++)
 			{
-				if (life[row][col] == 1)
-				{
-					for (int i = -1; i <= 1; i++)
-					{
-						for (int j = -1; j <= 1; j++)
-						{
-							if (life[row + i][col + j] == 1)
-							{
-								count[row][col]++;
-							}
-						}
-					}
-					count[row][col]--;
-				}
-				else if (life[row][col] == 1)
-				{
-					for (int i = -1; i <= 1; i++)
-					{
-						for (int j = -1; j <= 1; j++)
-						{
-							if (life[row + i][col + j] == 1)
-							{
-								count[row][col]++;
-							}
-						}
-					}
-				}
+				int temp = 0;
 
+				for (int i = -1; i <= 1; i++)
+				{
+					for (int j = -1; j <= 1; j++)
+					{
+						if (i == 0 && j == 0)	continue;
+
+						int temp_x = row + i;
+						int temp_y = col + j;
+
+						if (temp_x >= 0 && temp_x <= 40 && temp_y >= 0 && temp_y <= 40)
+						{
+							temp += life[temp_x][temp_y];
+						}
+					}
+				}
+				count[row][col] = temp;
 			}
 		}
 
 
-		for (int row = 0; row <= 40; row++)
+		for (int row = 0; row < 40; row++)
 		{
-			for (int col = 0; col <= 40; col++)
+			for (int col = 0; col < 40; col++)
 			{
 				if (life[row][col] == 1)
 				{
 					if (count[row][col] > 3 || count[row][col] < 2)
 					{
-						life[row][col] == 0;
+						life[row][col] = 0;
 					}
-					else if (count[row][col] == 2 || count[row][col] == 3)
-					{
-						life[row][col] == 1;
-					}
-					else
-					{
-						life[row][col] == 0;
-					}
+					
 				}
-				else if (life[row][col] == 0)
+				else
 				{
 					if (count[row][col] == 3)
 					{
-						life[row][col] == 1;
+						life[row][col] = 1;
 					}
 				}
 			}
@@ -179,9 +162,9 @@ int main() {
 
 		cleardevice();
 
-		for (int row = 0; row <= 40; row++)
+		for (int row = 0; row < 40; row++)
 		{
-			for (int col = 0; col <= 40; col++)
+			for (int col = 0; col < 40; col++)
 			{
 				if (life[row][col] == 1)
 				{
@@ -201,13 +184,9 @@ int main() {
 		}
 
 
-		Sleep(1000);
+		Sleep(100);
 
 	}
-
-
-
-
 
 
 
