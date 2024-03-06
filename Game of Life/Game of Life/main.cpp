@@ -59,6 +59,7 @@ int main() {
 	int key = 0;        //ÅÐ¶ÏStart×´¿ö
 
 
+	
 
 
 
@@ -68,7 +69,7 @@ int main() {
 
 		if (key == 0)
 		{
-			rectangle(360, 810, 440, 840);
+			rectangle(ROW * SIZE / 2 - 10, 810, 440, 840);
 			outtextxy(378, 818, _T("START"));
 		}
 		else
@@ -131,6 +132,8 @@ int main() {
 
 	while (1)
 	{
+		BeginBatchDraw();
+
 
 		for (int row = 0; row < ROW; row++)
 		{
@@ -200,6 +203,8 @@ int main() {
 				}
 			}
 		}
+
+		EndBatchDraw();
 
 
 		Sleep(500);
