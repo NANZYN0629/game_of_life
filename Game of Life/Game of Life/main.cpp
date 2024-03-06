@@ -75,6 +75,7 @@ int main() {
 		{
 			setlinecolor(RED);
 			rectangle(360, 810, 440, 840);
+			outtextxy(378, 818, _T("START"));
 			break;
 		}
 
