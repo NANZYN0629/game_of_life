@@ -25,12 +25,15 @@ void map(int R,int C,int S)
 	}
 }
 
+
 void live(int x, int y, int s)
 {
 	setfillcolor(WHITE);
 	setlinecolor(0);
 	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
 }
+
+
 
 void die(int x, int y, int s)
 {
@@ -46,7 +49,7 @@ void die(int x, int y, int s)
 int main() {
 
 
-	initgraph(ROW * SIZE, COL * (SIZE + 2));        //创建窗口
+	initgraph(ROW * SIZE, COL * SIZE);        //创建窗口
 
 
 	//绘制界面
@@ -58,27 +61,22 @@ int main() {
 
 	int key = 0;        //判断Start状况
 
-
+	int sleep_time = 500;
 	
 
-
+A:
 
 	ExMessage msg;
 
-	while (1) {
+	while (1) 
+	{
 
-		if (key == 0)
+		if (key == 1)
 		{
-			rectangle(ROW * SIZE / 2 - 10, 810, 440, 840);
-			outtextxy(378, 818, _T("START"));
-		}
-		else
-		{
-			setlinecolor(RED);
-			rectangle(360, 810, 440, 840);
-			outtextxy(378, 818, _T("START"));
+			key--;
 			break;
 		}
+		
 
 
 
@@ -97,12 +95,7 @@ int main() {
 					live(temp_x, temp_y, SIZE);
 
 				}
-				else if (msg.x >= 360 && msg.x <= 810 && msg.y >= 440 && msg.y <= 840)
-				{
-					key += 1;
-					key %= 2;
-					//cout << key;
-				}
+
 				break;
 			case WM_RBUTTONDOWN:
 				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
@@ -117,21 +110,51 @@ int main() {
 				}
 				break;
 
-				if (msg.x >= 360 && msg.x <= 810 && msg.y >= 440 && msg.y <= 840)
-				{
-					setlinecolor(WHITE);
-					fillrectangle(360, 810, 440, 840);
-				}
 			default:
 				break;
 			}
 		}
+
+
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			cout << "空格键点击" << endl;
+			key++;
+			key %= 2;
+		}
+
+
 	}
 
 
 
 	while (1)
 	{
+
+		if (GetAsyncKeyState(VK_UP))
+		{
+			cout << "上方向键点击" << endl;
+			sleep_time -= 100;
+			cout << sleep_time << endl;
+		}
+
+		if (GetAsyncKeyState(VK_DOWN))
+		{
+			cout << "下方向键点击" << endl;
+			sleep_time += 100;
+
+			cout << sleep_time << endl;
+		}
+
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			goto A;
+		}
+
+
+
+
+
 		BeginBatchDraw();
 
 
@@ -204,10 +227,11 @@ int main() {
 			}
 		}
 
+
 		EndBatchDraw();
 
 
-		Sleep(500);
+		Sleep(sleep_time);
 
 	}
 
