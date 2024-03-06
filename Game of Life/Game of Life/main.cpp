@@ -1,45 +1,23 @@
-
-#include <iostream>
-#include <graphics.h>
-#include <time.h>
-#include <conio.h>
-#include <ctime>
-#include <windows.h>
-using namespace std;
-
-
-
+#include "main.h"
 
 int main() {
 
-	initgraph(800, 850);        //创建窗口
-
+	//创建窗口
+	initgraph(ROW * SIZE, COL * (SIZE + 2));
 
 	//绘制界面
-	for (int row = 0; row <= 40; row++)
-	{
-		for (int col = 0; col <= 40; col++)
-		{
-			line(0, row * 20, 800, row * 20);
-			line(col * 20, 0, col * 20, 800);
-		}
-	}
+	map(ROW, COL, SIZE);
+	//声明二维数组来表示生命状态
+	int life[ROW][COL] = { 0 };
+	int count[ROW][COL] = { 0 };
 
-	int life[40][40] = { 0 };       //声明二维数组来表示生命状态
-	int count[40][40] = { 0 };
-
-
-	int key = 0;        //判断Start状况
-
-
-
-
-
+	//判断Start状况
+	int key = 0;
+	//鼠标控制
 	ExMessage msg;
 
 	while (1) {
-
-	A:
+		//开始键设置
 		if (key == 0)
 		{
 			rectangle(360, 810, 440, 840);
@@ -49,26 +27,24 @@ int main() {
 		{
 			setlinecolor(RED);
 			rectangle(360, 810, 440, 840);
+			outtextxy(378, 818, _T("START"));
 			break;
 		}
 
-
-
-		if (peekmessage(&msg, EM_MOUSE))        //有鼠标消息返回真，没有返回假
+		//有鼠标消息返回真，没有返回假
+		if (peekmessage(&msg, EM_MOUSE))
 		{
 			switch (msg.message)
 			{
 			case WM_LBUTTONDOWN:
-				if (msg.x >= 0 && msg.x <= 800 && msg.y >= 0 && msg.y <= 800)
+				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
 				{
 					cout << "哼哼,被左键点击了" << endl;
-					int temp_x = msg.x / 20;
-					int temp_y = msg.y / 20;
+					int temp_x = msg.x / SIZE;
+					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 1;
 
-					setfillcolor(WHITE);
-					setlinecolor(0);
-					fillrectangle(temp_x * 20, temp_y * 20, (temp_x + 1) * 20, (temp_y + 1) * 20);
+					live(temp_x, temp_y, SIZE);
 
 				}
 				else if (msg.x >= 360 && msg.x <= 810 && msg.y >= 440 && msg.y <= 840)
@@ -79,18 +55,15 @@ int main() {
 				}
 				break;
 			case WM_RBUTTONDOWN:
-				if (msg.x >= 0 && msg.x <= 800 && msg.y >= 0 && msg.y <= 800)
+				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
 				{
 
 					cout << "哼哼,被右键点击了" << endl;
-					int temp_x = msg.x / 20;
-					int temp_y = msg.y / 20;
+					int temp_x = msg.x / SIZE;
+					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 0;
 
-					setfillcolor(0);
-					setlinecolor(WHITE);
-					fillrectangle(temp_x * 20, temp_y * 20, (temp_x + 1) * 20, (temp_y + 1) * 20);
-
+					die(temp_x, temp_y, SIZE);
 				}
 				break;
 
@@ -105,95 +78,19 @@ int main() {
 		}
 	}
 
-
-
 	while (1)
 	{
-
-		for (int row = 0; row < 40; row++)
-		{
-			for (int col = 0; col < 40; col++)
-			{
-				int temp = 0;
-
-				for (int i = -1; i <= 1; i++)
-				{
-					for (int j = -1; j <= 1; j++)
-					{
-						if (i == 0 && j == 0)	continue;
-
-						int temp_x = row + i;
-						int temp_y = col + j;
-
-						if (temp_x >= 0 && temp_x <= 40 && temp_y >= 0 && temp_y <= 40)
-						{
-							temp += life[temp_x][temp_y];
-						}
-					}
-				}
-				count[row][col] = temp;
-			}
-		}
-
-
-		for (int row = 0; row < 40; row++)
-		{
-			for (int col = 0; col < 40; col++)
-			{
-				if (life[row][col] == 1)
-				{
-					if (count[row][col] > 3 || count[row][col] < 2)
-					{
-						life[row][col] = 0;
-					}
-					
-				}
-				else
-				{
-					if (count[row][col] == 3)
-					{
-						life[row][col] = 1;
-					}
-				}
-			}
-		}
-
-
-
+		//检查生命的死亡和诞生
+		checklife(life, count);
+		//刷新界面
 		cleardevice();
-
-		for (int row = 0; row < 40; row++)
-		{
-			for (int col = 0; col < 40; col++)
-			{
-				if (life[row][col] == 1)
-				{
-					setfillcolor(WHITE);
-					setlinecolor(0);
-					fillrectangle(row * 20, col * 20, (row + 1) * 20, (col + 1) * 20);
-
-				}
-				else if (life[row][col] == 0)
-				{
-					setfillcolor(0);
-					setlinecolor(WHITE);
-					fillrectangle(row * 20, col * 20, (row + 1) * 20, (col + 1) * 20);
-
-				}
-			}
-		}
-
-
-		Sleep(100);
+		//重新绘制新的生命
+		againdraw(life);
+		//延迟时间,以便观察动态演变
+		Sleep(500);
 
 	}
-
-
-
-	getchar();
-
+	//关闭界面
 	closegraph();
 	return 0;
-
-
 }
