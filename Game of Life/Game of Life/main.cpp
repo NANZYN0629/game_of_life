@@ -8,25 +8,52 @@
 using namespace std;
 
 
+#define ROW  50
+#define COL 50
+#define SIZE 15
+
+
+void map(int R,int C,int S)
+{
+	for (int row = 0; row <= R; row++)
+	{
+		for (int col = 0; col <= R; col++)
+		{
+			line(0, row * S, R * S, row * S);
+			line(col * S, 0, col * S, C * S);
+		}
+	}
+}
+
+void live(int x, int y, int s)
+{
+	setfillcolor(WHITE);
+	setlinecolor(0);
+	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
+}
+
+void die(int x, int y, int s)
+{
+	setfillcolor(0);
+	setlinecolor(WHITE);
+	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
+}
+
+
+
 
 
 int main() {
 
-	initgraph(800, 850);        //创建窗口
+
+	initgraph(ROW * SIZE, COL * (SIZE + 2));        //创建窗口
 
 
 	//绘制界面
-	for (int row = 0; row <= 40; row++)
-	{
-		for (int col = 0; col <= 40; col++)
-		{
-			line(0, row * 20, 800, row * 20);
-			line(col * 20, 0, col * 20, 800);
-		}
-	}
+	map(ROW, COL, SIZE);
 
-	int life[40][40] = { 0 };       //声明二维数组来表示生命状态
-	int count[40][40] = { 0 };
+	int life[ROW][COL] = { 0 };       //声明二维数组来表示生命状态
+	int count[ROW][COL] = { 0 };
 
 
 	int key = 0;        //判断Start状况
@@ -39,7 +66,6 @@ int main() {
 
 	while (1) {
 
-	A:
 		if (key == 0)
 		{
 			rectangle(360, 810, 440, 840);
@@ -59,16 +85,14 @@ int main() {
 			switch (msg.message)
 			{
 			case WM_LBUTTONDOWN:
-				if (msg.x >= 0 && msg.x <= 800 && msg.y >= 0 && msg.y <= 800)
+				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
 				{
 					cout << "哼哼,被左键点击了" << endl;
-					int temp_x = msg.x / 20;
-					int temp_y = msg.y / 20;
+					int temp_x = msg.x / SIZE;
+					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 1;
 
-					setfillcolor(WHITE);
-					setlinecolor(0);
-					fillrectangle(temp_x * 20, temp_y * 20, (temp_x + 1) * 20, (temp_y + 1) * 20);
+					live(temp_x, temp_y, SIZE);
 
 				}
 				else if (msg.x >= 360 && msg.x <= 810 && msg.y >= 440 && msg.y <= 840)
@@ -79,18 +103,15 @@ int main() {
 				}
 				break;
 			case WM_RBUTTONDOWN:
-				if (msg.x >= 0 && msg.x <= 800 && msg.y >= 0 && msg.y <= 800)
+				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
 				{
 
 					cout << "哼哼,被右键点击了" << endl;
-					int temp_x = msg.x / 20;
-					int temp_y = msg.y / 20;
+					int temp_x = msg.x / SIZE;
+					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 0;
 
-					setfillcolor(0);
-					setlinecolor(WHITE);
-					fillrectangle(temp_x * 20, temp_y * 20, (temp_x + 1) * 20, (temp_y + 1) * 20);
-
+					die(temp_x, temp_y, SIZE);
 				}
 				break;
 
@@ -110,9 +131,9 @@ int main() {
 	while (1)
 	{
 
-		for (int row = 0; row < 40; row++)
+		for (int row = 0; row < ROW; row++)
 		{
-			for (int col = 0; col < 40; col++)
+			for (int col = 0; col < COL; col++)
 			{
 				int temp = 0;
 
@@ -125,7 +146,7 @@ int main() {
 						int temp_x = row + i;
 						int temp_y = col + j;
 
-						if (temp_x >= 0 && temp_x <= 40 && temp_y >= 0 && temp_y <= 40)
+						if (temp_x >= 0 && temp_x <= ROW && temp_y >= 0 && temp_y <= COL)
 						{
 							temp += life[temp_x][temp_y];
 						}
@@ -136,9 +157,9 @@ int main() {
 		}
 
 
-		for (int row = 0; row < 40; row++)
+		for (int row = 0; row < ROW; row++)
 		{
-			for (int col = 0; col < 40; col++)
+			for (int col = 0; col < COL; col++)
 			{
 				if (life[row][col] == 1)
 				{
@@ -162,29 +183,25 @@ int main() {
 
 		cleardevice();
 
-		for (int row = 0; row < 40; row++)
+		for (int row = 0; row < ROW; row++)
 		{
-			for (int col = 0; col < 40; col++)
+			for (int col = 0; col < COL; col++)
 			{
 				if (life[row][col] == 1)
 				{
-					setfillcolor(WHITE);
-					setlinecolor(0);
-					fillrectangle(row * 20, col * 20, (row + 1) * 20, (col + 1) * 20);
+					live(row, col, SIZE);
 
 				}
 				else if (life[row][col] == 0)
 				{
-					setfillcolor(0);
-					setlinecolor(WHITE);
-					fillrectangle(row * 20, col * 20, (row + 1) * 20, (col + 1) * 20);
+					die(row, col, SIZE);
 
 				}
 			}
 		}
 
 
-		Sleep(100);
+		Sleep(500);
 
 	}
 
