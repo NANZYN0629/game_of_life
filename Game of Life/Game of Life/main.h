@@ -6,6 +6,7 @@
 #include <conio.h>
 #include <ctime>
 #include <windows.h>
+#include <Windows.h>
 //¼ò»¯ÃüÃû
 using namespace std;
 
@@ -21,3 +22,6 @@ void checklife(int life[ROW][COL], int count[ROW][COL]);
 void againdraw(int life[ROW][COL]);
 int control(int s);
 void click(int life[ROW][COL]);
+void backrecord(int life[ROW][COL], int back[ROW][COL]);
+void backdraw(int life[ROW][COL], int back[ROW][COL]);
+void backwhite(int life[ROW][COL], int back[ROW][COL]);

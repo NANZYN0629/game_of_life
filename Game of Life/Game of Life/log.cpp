@@ -96,6 +96,36 @@ void checklife(int life[ROW][COL], int count[ROW][COL]) {
 	}
 }
 
+void backrecord(int life[ROW][COL],int back[ROW][COL]) {
+
+	for (int row = 0; row < ROW; row++)
+	{
+		for (int col = 0; col < COL; col++)
+		{
+			back[row][col] = life[row][col];
+		}
+	}
+}
+void backwhite(int life[ROW][COL], int back[ROW][COL]) {
+
+	for (int row = 0; row < ROW; row++)
+	{
+		for (int col = 0; col < COL; col++)
+		{
+			life[row][col] = 0;
+		}
+	}
+}
+void backdraw(int life[ROW][COL], int back[ROW][COL]) {
+
+	for (int row = 0; row < ROW; row++)
+	{
+		for (int col = 0; col < COL; col++)
+		{
+			life[row][col] = back[row][col];
+		}
+	}
+}
 void againdraw(int life[ROW][COL]) {
 	for (int row = 0; row < ROW; row++)
 	{
