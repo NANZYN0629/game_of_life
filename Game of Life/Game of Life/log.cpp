@@ -26,6 +26,20 @@ void die(int x, int y, int s)
 	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
 }
 
+void backlife(int x, int y, int s)
+{
+	setfillcolor(GREEN);
+	setlinecolor(0);
+	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
+}
+
+void backdie(int x, int y, int s)
+{
+	setfillcolor(RED);
+	setlinecolor(0);
+	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
+}
+
 void checklife(int life[ROW][COL], int count[ROW][COL]) {
 	for (int row = 0; row < ROW; row++)
 	{
@@ -61,15 +75,21 @@ void checklife(int life[ROW][COL], int count[ROW][COL]) {
 			{
 				if (count[row][col] > 3 || count[row][col] < 2)
 				{
-					life[row][col] = 0;
+					life[row][col] = -1;
+
+				}else{
+
+
 				}
 
-			}
-			else
+			}else
 			{
 				if (count[row][col] == 3)
 				{
-					life[row][col] = 1;
+					life[row][col] = 2;
+
+				}else{
+
 				}
 			}
 		}
@@ -91,6 +111,18 @@ void againdraw(int life[ROW][COL]) {
 				die(row, col, SIZE);
 
 			}
+			else if (life[row][col] == 2) {
+
+				backlife(row, col, SIZE);
+				life[row][col] = 1;
+			}
+			else if (life[row][col] == -1) {
+
+                backdie(row, col, SIZE);
+				life[row][col] = 0;
+			}
+
+				
 		}
 	}
 }
