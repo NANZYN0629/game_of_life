@@ -1,3 +1,4 @@
-﻿  main.cpp
-D:\GitHub\game_of_life\Game of Life\Game of Life\main.cpp(42,2): warning C4102: “A”: 未引用的标签
+﻿  log.cpp
+  main.cpp
+  正在生成代码...
   Game of Life.vcxproj -> D:\GitHub\game_of_life\Game of Life\x64\Debug\Game of Life.exe

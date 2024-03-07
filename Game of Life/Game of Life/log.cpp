@@ -1,4 +1,5 @@
 #include "main.h"
+
 void map(int R, int C, int S)
 {
 	for (int row = 0; row <= R; row++)
@@ -93,3 +94,17 @@ void againdraw(int life[ROW][COL]) {
 		}
 	}
 }
+int control(int sleep_time) {
+	if (GetAsyncKeyState(VK_UP)) {
+		cout << "上方向键点击" << endl;
+		sleep_time -= 50;
+		cout << sleep_time << endl;
+	}
+	if (GetAsyncKeyState(VK_DOWN)) {
+		cout << "下方向键点击" << endl;
+		sleep_time += 50;
+		cout << sleep_time << endl;
+	}
+	return sleep_time;
+}
+//void click(int life[ROW][COL]) 

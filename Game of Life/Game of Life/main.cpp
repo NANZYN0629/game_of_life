@@ -11,23 +11,19 @@ int main() {
 	int life[ROW][COL] = { 0 };
 	int count[ROW][COL] = { 0 };
 
+	//设置最初的延迟时间
+	int sleep_time = 500;
+A:
 	//判断Start状况
 	int key = 0;
-	//鼠标控制
 	ExMessage msg;
 
 	while (1) {
-		//开始键设置
-		if (key == 0)
+
+		//开始键设置,跳出循环
+		if (key == 1)
 		{
-			rectangle(360, 810, 440, 840);
-			outtextxy(378, 818, _T("START"));
-		}
-		else
-		{
-			setlinecolor(RED);
-			rectangle(360, 810, 440, 840);
-			outtextxy(378, 818, _T("START"));
+			key--;
 			break;
 		}
 
@@ -47,12 +43,7 @@ int main() {
 					live(temp_x, temp_y, SIZE);
 
 				}
-				else if (msg.x >= 360 && msg.x <= 810 && msg.y >= 440 && msg.y <= 840)
-				{
-					key += 1;
-					key %= 2;
-					//cout << key;
-				}
+
 				break;
 			case WM_RBUTTONDOWN:
 				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
@@ -67,27 +58,39 @@ int main() {
 				}
 				break;
 
-				if (msg.x >= 360 && msg.x <= 810 && msg.y >= 440 && msg.y <= 840)
-				{
-					setlinecolor(WHITE);
-					fillrectangle(360, 810, 440, 840);
-				}
 			default:
 				break;
 			}
+			
+		}
+		//空格开始;
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			cout << "空格键点击" << endl;
+			key++;
+			key %= 2;
 		}
 	}
 
 	while (1)
-	{
+	{   
+		//鼠标控制
+		sleep_time=control(sleep_time);
+		if (GetAsyncKeyState(VK_SPACE)) {
+			goto A;
+		}
+		//双缓冲减少闪烁
+		BeginBatchDraw();
 		//检查生命的死亡和诞生
 		checklife(life, count);
 		//刷新界面
 		cleardevice();
 		//重新绘制新的生命
 		againdraw(life);
+		// 结束批量绘制
+		EndBatchDraw();
 		//延迟时间,以便观察动态演变
-		Sleep(500);
+		Sleep(sleep_time);
 
 	}
 	//关闭界面
