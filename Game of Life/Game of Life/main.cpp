@@ -1,7 +1,6 @@
 #include "main.h"
 
 int main() {
-
 	//创建窗口
 	initgraph(ROW * SIZE, COL * (SIZE + 2));
 
@@ -15,7 +14,7 @@ int main() {
 	//设置最初的延迟时间
 	int sleep_time = 500;
 A:
-	//判断Start状况
+	//设置开始键
 	int key = 0;
 	ExMessage msg;
 
@@ -27,15 +26,16 @@ A:
 			key--;
 			break;
 		}
-		//点击s键回到初始界面
+		//空格时,点击s键回到初始界面
 		if (GetAsyncKeyState(0x53)) {
-			backwhite(life,back);
+			//清空,重新开始
+			backwhite(life);
+			//刷新界面
 			cleardevice();
 			againdraw(life);
 		}
-        //点击w键回到上一个生命状态
+        //空格时,点击w键回到上一个生命状态
 		if (GetAsyncKeyState(0x57)) {
-			//backdraw(life,back);
 			cleardevice();
 			againdraw(back);
 		}
@@ -51,7 +51,7 @@ A:
 					int temp_x = msg.x / SIZE;
 					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 1;
-
+					//给存活细胞赋值
 					live(temp_x, temp_y, SIZE);
 
 				}
@@ -65,7 +65,7 @@ A:
 					int temp_x = msg.x / SIZE;
 					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 0;
-
+					//给死亡细胞赋值
 					die(temp_x, temp_y, SIZE);
 				}
 				break;
@@ -86,7 +86,6 @@ A:
 
 	while (1)
 	{   
-		
 		//双缓冲减少闪烁
 		BeginBatchDraw();
 		//记录上一次生命状态

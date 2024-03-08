@@ -23,5 +23,4 @@ void againdraw(int life[ROW][COL]);
 int control(int s);
 void click(int life[ROW][COL]);
 void backrecord(int life[ROW][COL], int back[ROW][COL]);
-void backdraw(int life[ROW][COL], int back[ROW][COL]);
-void backwhite(int life[ROW][COL], int back[ROW][COL]);
+void backwhite(int life[ROW][COL]);
