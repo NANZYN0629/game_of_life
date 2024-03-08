@@ -25,14 +25,14 @@ void die(int x, int y, int s)
 void live_after(int x, int y, int s)
 {
 	setfillcolor(GREEN);
-	setlinecolor(0);
+	setlinecolor(WHITE);
 	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
 }
 
-void die_befor(int x, int y, int s)
+void die_before(int x, int y, int s)
 {
 	setfillcolor(RED);
-	setlinecolor(0);
+	setlinecolor(WHITE);
 	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
 }
 
@@ -56,10 +56,13 @@ void map(int life[ROW][COL])
 			else if (life[row][col] == 2)
 			{
 				live_after(row, col, SIZE);
+				life[row][col] = 1;
+
 			}
-			else if (life[row][col] == 3)
+			else if (life[row][col] == -1)
 			{
-				die_befor(row, col, SIZE);
+				die_before(row, col, SIZE);
+				life[row][col] = 0;
 			}
 		}
 	}

@@ -6,7 +6,6 @@
 #include <windows.h>
 using namespace std;
 
-#include "value.h"
 #include "map.h"
 #include "check.h"
 
@@ -20,10 +19,10 @@ using namespace std;
 int main() {
 
 
-	initgraph(ROW * SIZE, (COL + 2) * SIZE);        //创建窗口
+	initgraph(ROW * SIZE, COL * SIZE);        //创建窗口
 
 
-	
+
 
 	//绘制界面
 	//map(ROW, COL, SIZE);
@@ -37,31 +36,16 @@ A:
 	int key = 0;        //判断Start状况
 	int temp_map[ROW][COL];
 	int sleep_time = 500;
-	
-	int step = 0;
-
-	
-
 
 	ExMessage msg;
 
 	while (1)
 	{
 		BeginBatchDraw();
-		
-		settextcolor(WHITE);
-		outtextxy(770, 50, step);
-		
-		cout << step;
-		
 
-		temp_map[ROW][COL] = life[ROW][COL];
-		
 
 		if (key == 1)
 		{
-			step++;
-
 			check(life, count);
 			cleardevice();
 			map(life);
@@ -75,22 +59,13 @@ A:
 		}
 		else if (key == 2)
 		{
-			step++;
-
 			key = 0;
 			check(life, count);
 			cleardevice();
 			map(life);
 			Sleep(200);
 		}
-		else if (key == 3)
-		{
-			key = 0;
-			check(temp_map, count);
-			cleardevice();
-			map(temp_map);
-			Sleep(200);
-		}
+
 
 
 
@@ -109,7 +84,7 @@ A:
 					life[temp_x][temp_y] = 1;
 				}
 				break;
-			
+
 			case WM_RBUTTONDOWN:
 				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
 				{
@@ -138,9 +113,9 @@ A:
 		{
 			cout << "上方向键点击" << endl;
 			sleep_time -= 100;
-			if (sleep_time <= 0)
+			if (sleep_time <= 100)
 			{
-				sleep_time = 0;
+				sleep_time = 100;
 			}
 			cout << sleep_time << endl;
 		}
@@ -155,12 +130,16 @@ A:
 
 		if (GetAsyncKeyState(VK_RIGHT))
 		{
+			cout << "右方向键点击" << endl;
+			sleep_time += 100;
 			key = 2;
 		}
 
 		if (GetAsyncKeyState(VK_LEFT))
 		{
-			key = 3;
+			cout << "左方向键点击" << endl;
+			sleep_time += 100;
+			map(temp_map);
 		}
 
 		if (GetAsyncKeyState(VK_F9))
@@ -168,7 +147,16 @@ A:
 			goto A;
 		}
 
+
+
 		
+		for (int row = 0; row <= ROW; row++)
+		{
+			for (int col = 0; row <= COL; col++)
+			{
+				temp_map[row][col] = life[row][col];
+			}
+		}
 
 		EndBatchDraw();
 	}

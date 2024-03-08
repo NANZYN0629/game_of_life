@@ -48,7 +48,7 @@ void live_check(int life[ROW][COL], int count[ROW][COL])
 			{
 				if (count[row][col] > 3 || count[row][col] < 2)
 				{
-					life[row][col] = 0;
+					life[row][col] = -1;
 				}
 
 			}
@@ -56,7 +56,7 @@ void live_check(int life[ROW][COL], int count[ROW][COL])
 			{
 				if (count[row][col] == 3)
 				{
-					life[row][col] = 1;
+					life[row][col] = 2;
 				}
 			}
 		}
