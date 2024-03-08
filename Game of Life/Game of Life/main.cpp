@@ -3,44 +3,15 @@
 #include <graphics.h>
 #include <time.h>
 #include <conio.h>
-#include <ctime>
 #include <windows.h>
 using namespace std;
 
-
-#define ROW  50
-#define COL 50
-#define SIZE 15
-
-
-void map(int R,int C,int S)
-{
-	for (int row = 0; row <= R; row++)
-	{
-		for (int col = 0; col <= R; col++)
-		{
-			line(0, row * S, R * S, row * S);
-			line(col * S, 0, col * S, C * S);
-		}
-	}
-}
-
-
-void live(int x, int y, int s)
-{
-	setfillcolor(WHITE);
-	setlinecolor(0);
-	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
-}
+#include "value.h"
+#include "map.h"
+#include "check.h"
 
 
 
-void die(int x, int y, int s)
-{
-	setfillcolor(0);
-	setlinecolor(WHITE);
-	fillrectangle(x * s, y * s, (x + 1) * s, (y + 1) * s);
-}
 
 
 
@@ -49,34 +20,79 @@ void die(int x, int y, int s)
 int main() {
 
 
-	initgraph(ROW * SIZE, COL * SIZE);        //创建窗口
+	initgraph(ROW * SIZE, (COL + 2) * SIZE);        //创建窗口
 
+
+	
 
 	//绘制界面
-	map(ROW, COL, SIZE);
+	//map(ROW, COL, SIZE);
+
+A:
 
 	int life[ROW][COL] = { 0 };       //声明二维数组来表示生命状态
 	int count[ROW][COL] = { 0 };
 
 
 	int key = 0;        //判断Start状况
-
+	int temp_map[ROW][COL];
 	int sleep_time = 500;
 	
+	int step = 0;
 
-A:
+	
+
 
 	ExMessage msg;
 
-	while (1) 
+	while (1)
 	{
+		BeginBatchDraw();
+		
+		settextcolor(WHITE);
+		outtextxy(770, 50, step);
+		
+		cout << step;
+		
+
+		temp_map[ROW][COL] = life[ROW][COL];
+		
 
 		if (key == 1)
 		{
-			key--;
-			break;
+			step++;
+
+			check(life, count);
+			cleardevice();
+			map(life);
+			Sleep(sleep_time);
+
 		}
-		
+		else if (key == 0)
+		{
+			cleardevice();
+			map(life);
+		}
+		else if (key == 2)
+		{
+			step++;
+
+			key = 0;
+			check(life, count);
+			cleardevice();
+			map(life);
+			Sleep(200);
+		}
+		else if (key == 3)
+		{
+			key = 0;
+			check(temp_map, count);
+			cleardevice();
+			map(temp_map);
+			Sleep(200);
+		}
+
+
 
 
 
@@ -91,12 +107,9 @@ A:
 					int temp_x = msg.x / SIZE;
 					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 1;
-
-					live(temp_x, temp_y, SIZE);
-
 				}
-
 				break;
+			
 			case WM_RBUTTONDOWN:
 				if (msg.x >= 0 && msg.x <= ROW * SIZE && msg.y >= 0 && msg.y <= COL * SIZE)
 				{
@@ -105,8 +118,6 @@ A:
 					int temp_x = msg.x / SIZE;
 					int temp_y = msg.y / SIZE;
 					life[temp_x][temp_y] = 0;
-
-					die(temp_x, temp_y, SIZE);
 				}
 				break;
 
@@ -123,18 +134,14 @@ A:
 			key %= 2;
 		}
 
-
-	}
-
-
-
-	while (1)
-	{
-
 		if (GetAsyncKeyState(VK_UP))
 		{
 			cout << "上方向键点击" << endl;
 			sleep_time -= 100;
+			if (sleep_time <= 0)
+			{
+				sleep_time = 0;
+			}
 			cout << sleep_time << endl;
 		}
 
@@ -146,94 +153,26 @@ A:
 			cout << sleep_time << endl;
 		}
 
-		if (GetAsyncKeyState(VK_SPACE))
+		if (GetAsyncKeyState(VK_RIGHT))
+		{
+			key = 2;
+		}
+
+		if (GetAsyncKeyState(VK_LEFT))
+		{
+			key = 3;
+		}
+
+		if (GetAsyncKeyState(VK_F9))
 		{
 			goto A;
 		}
 
-
-
-
-
-		BeginBatchDraw();
-
-
-		for (int row = 0; row < ROW; row++)
-		{
-			for (int col = 0; col < COL; col++)
-			{
-				int temp = 0;
-
-				for (int i = -1; i <= 1; i++)
-				{
-					for (int j = -1; j <= 1; j++)
-					{
-						if (i == 0 && j == 0)	continue;
-
-						int temp_x = row + i;
-						int temp_y = col + j;
-
-						if (temp_x >= 0 && temp_x <= ROW && temp_y >= 0 && temp_y <= COL)
-						{
-							temp += life[temp_x][temp_y];
-						}
-					}
-				}
-				count[row][col] = temp;
-			}
-		}
-
-
-		for (int row = 0; row < ROW; row++)
-		{
-			for (int col = 0; col < COL; col++)
-			{
-				if (life[row][col] == 1)
-				{
-					if (count[row][col] > 3 || count[row][col] < 2)
-					{
-						life[row][col] = 0;
-					}
-					
-				}
-				else
-				{
-					if (count[row][col] == 3)
-					{
-						life[row][col] = 1;
-					}
-				}
-			}
-		}
-
-
-
-		cleardevice();
-
-		for (int row = 0; row < ROW; row++)
-		{
-			for (int col = 0; col < COL; col++)
-			{
-				if (life[row][col] == 1)
-				{
-					live(row, col, SIZE);
-
-				}
-				else if (life[row][col] == 0)
-				{
-					die(row, col, SIZE);
-
-				}
-			}
-		}
-
+		
 
 		EndBatchDraw();
-
-
-		Sleep(sleep_time);
-
 	}
+
 
 
 
